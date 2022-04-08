@@ -1,31 +1,34 @@
 import { books, authors } from "../mock";
+import { IAuthor, IBook } from "../interface";
 
 const resolvers = {
   // Query
   Query: {
-    books: () => books,
-    book: (parent: any, args: any) => {
+    books: (): IBook[] => books,
+    book: (parent, args: { id: string }) => {
       const { id } = args;
-      return books.find((book: any) => book.id.toString() === id) || null;
+      return books.find((book: IBook) => book.id.toString() === id) || null;
     },
     authors: () => authors,
-    author: (parent: any, args: any) => {
+    author: (parent, args: { id: string }) => {
       const { id } = args;
-      return authors.find((author: any) => author.id.toString() === id) || null;
+      return (
+        authors.find((author: IAuthor) => author.id.toString() === id) || null
+      );
     },
   },
   Book: {
-    author: (parent: any, args: any) =>
-      authors.find((author: any) => author.id === parent.authorId),
+    author: (parent: IBook, args) =>
+      authors.find((author: IAuthor) => author.id === parent.authorId),
   },
   Author: {
-    books: (parent: any, args: any) =>
-      books.filter((book: any) => book.authorId === parent.id),
+    books: (parent: IAuthor, args) =>
+      books.filter((book: IBook) => book.authorId === parent.id),
   },
 
   // Mutation
   Mutation: {
-    createAuthor: (parent: any, args: any) => args,
+    createAuthor: (parent, args: IAuthor) => args,
   },
 };
 
